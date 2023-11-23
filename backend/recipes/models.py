@@ -168,7 +168,7 @@ class Favourite(FavouriteAndShoppinglistModel):
 
     def __str__(self) -> str:
         return (
-            f'{self.user} добавил {self.recipe} в Избранное'
+            f'{self.user} добавил рецепт "{self.recipe}" в Избранное'
         )
 
 
@@ -187,5 +187,5 @@ class Shoppinglist(FavouriteAndShoppinglistModel):
 
     def __str__(self) -> str:
         return (
-            f'{self.user} добавил {self.recipe} в Список покупок'
+            f'{self.user} добавил рецепт "{self.recipe}" в Список покупок'
         )
