@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from recipes.models import (Favourite, Ingredient, IngredientRecipe, Recipe,
-                            Shoppinglist, Tag)
+from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                            ShoppingCart, Tag)
 
 admin.site.empty_value_display = 'Не задано'
 
@@ -36,7 +36,7 @@ class RecipeAdmin(admin.ModelAdmin):
         'text',
         'author',
         'added_to_favorites',
-        'added_to_shopping_list',
+        'added_to_shopping_cart',
     )
     list_filter = (
         'author',
@@ -48,12 +48,12 @@ class RecipeAdmin(admin.ModelAdmin):
     )
 
     def added_to_favorites(self, object):
-        return object.favourites.count()
+        return object.favorites.count()
     added_to_favorites.short_description = 'Количество в избранных'
 
-    def added_to_shopping_list(self, object):
-        return object.shopping_lists.count()
-    added_to_shopping_list.short_description = 'Количество в списке покупок'
+    def added_to_shopping_cart(self, object):
+        return object.shopping_carts.count()
+    added_to_shopping_cart.short_description = 'Количество в списке покупок'
 
 
 @admin.register(IngredientRecipe)
@@ -65,16 +65,16 @@ class IngredientRecipeAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(Favourite)
-class FavouriteAdmin(admin.ModelAdmin):
+@admin.register(Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
     list_display = (
         'user',
         'recipe',
     )
 
 
-@admin.register(Shoppinglist)
-class ShoppinglistAdmin(admin.ModelAdmin):
+@admin.register(ShoppingCart)
+class ShoppingCartAdmin(admin.ModelAdmin):
     list_display = (
         'user',
         'recipe',

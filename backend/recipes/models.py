@@ -136,7 +136,7 @@ class IngredientRecipe(models.Model):
         )
 
 
-class FavouriteAndShoppinglistModel(models.Model):
+class FavoriteAndShoppingCartModel(models.Model):
     """Абстрактная модель для Избранное и Список покупок."""
     user = models.ForeignKey(
         User,
@@ -153,16 +153,16 @@ class FavouriteAndShoppinglistModel(models.Model):
         abstract = True
 
 
-class Favourite(FavouriteAndShoppinglistModel):
+class Favorite(FavoriteAndShoppingCartModel):
     """Модель Избранное."""
     class Meta:
         verbose_name = 'объект "Избранное"'
         verbose_name_plural = 'Избранное'
-        default_related_name = 'favourites'
+        default_related_name = 'favorites'
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
-                name='unique_favourite'
+                name='unique_favorite'
             )
         ]
 
@@ -172,16 +172,16 @@ class Favourite(FavouriteAndShoppinglistModel):
         )
 
 
-class Shoppinglist(FavouriteAndShoppinglistModel):
+class ShoppingCart(FavoriteAndShoppingCartModel):
     """Модель Список покупок."""
     class Meta:
         verbose_name = 'объект "Список покупок"'
         verbose_name_plural = 'Список покупок'
-        default_related_name = 'shopping_lists'
+        default_related_name = 'shopping_carts'
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
-                name='unique_shopping_list'
+                name='unique_shopping_cart'
             )
         ]
 
