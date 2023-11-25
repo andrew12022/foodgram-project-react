@@ -20,7 +20,7 @@ class User(AbstractUser):
                 regex=r'^[\w.@+-]+$',
                 message='Ошибка! Проверьте вводимый формат'
             )
-        ]
+        ],
     )
     first_name = models.CharField(
         max_length=150,
@@ -33,7 +33,7 @@ class User(AbstractUser):
     password = models.CharField(
         max_length=150,
         verbose_name='Пароль',
-        validators=[validate_password]
+        validators=[validate_password],
     )
 
     class Meta:
