@@ -1,7 +1,28 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from users.models import User, Subscriber
+from users.models import Subscriber, User
 
-admin.site.register(User, UserAdmin)
-admin.site.register(Subscriber)
+admin.site.empty_value_display = 'Не задано'
+
+
+@admin.register(User)
+class UserAdmin(UserAdmin):
+    list_display = (
+        'username',
+        'email',
+        'first_name',
+        'last_name',
+    )
+    list_filter = (
+        'email',
+        'first_name',
+    )
+
+
+@admin.register(Subscriber)
+class UserAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'author',
+    )
