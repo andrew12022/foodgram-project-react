@@ -9,7 +9,7 @@ class NameModel(models.Model):
     """Абстрактная модель для Тег, Ингредиент и Рецепт."""
     name = models.CharField(
         verbose_name='Название',
-        max_length=256,
+        max_length=200,
     )
 
     class Meta:
