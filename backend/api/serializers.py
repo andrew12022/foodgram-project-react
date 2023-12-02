@@ -220,6 +220,34 @@ class RecipePostSerializer(serializers.ModelSerializer):
             'cooking_time',
         )
 
+    def validate(self, data):
+        if 'tags' not in data or not data['tags']:
+            raise serializers.ValidationError("Теги должны быть указаны.")
+        if 'ingredients' not in data or not data['ingredients']:
+            raise serializers.ValidationError("Ингредиенты должны быть указаны.")
+        return data
+
+    def validate_tags(self, value):
+        if not value:
+            raise serializers.ValidationError("Теги не могут быть пустыми.")
+        tags_list = []
+        for tag in value:
+            if tag in tags_list:
+                raise serializers.ValidationError("Теги не могут повторяться.")
+            tags_list.append(tag)
+        return value
+
+    def validate_ingredients(self, value):
+        if not value:
+            raise serializers.ValidationError("Ингредиенты не могут быть пустыми.")
+        ingredient_list = []
+        for ingredient in value:
+            if ingredient['id'] in ingredient_list:
+                raise serializers.ValidationError("Ингредиенты не могут повторяться.")
+            ingredient_list.append(ingredient['id'])
+        return value
+
+    @staticmethod
     def create_ingredients(ingredients, recipe):
         ingredient_list = []
         for ingredient_data in ingredients:
