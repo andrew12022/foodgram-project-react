@@ -13,6 +13,7 @@ User = get_user_model()
 
 
 class Hex2NameColor(serializers.Field):
+    """Сериализатор для обработки шестнадцатеричного представления цвета."""
     def to_representation(self, value):
         return value
 
@@ -25,6 +26,7 @@ class Hex2NameColor(serializers.Field):
 
 
 class UserCreateSerializer(UserCreateSerializer):
+    """Сериализатор для создания пользования."""
     class Meta:
         model = User
         fields = (
@@ -38,6 +40,7 @@ class UserCreateSerializer(UserCreateSerializer):
 
 
 class UserSerializer(UserSerializer):
+    """Сериализатор пользователя."""
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
@@ -59,6 +62,7 @@ class UserSerializer(UserSerializer):
 
 
 class SubscribeSerializer(UserSerializer):
+    """Сериализатор для подписки."""
     recipes_count = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
 
@@ -99,6 +103,7 @@ class SubscribeSerializer(UserSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
+    """Сериализатор тегов."""
     color = Hex2NameColor()
 
     class Meta:
@@ -112,6 +117,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
+    """Сериализатор ингредиентов."""
 
     class Meta:
         model = Ingredient
@@ -123,6 +129,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class Base64ImageField(serializers.ImageField):
+    """Сериализатор для обработки изображений в формате base64."""
     def to_internal_value(self, data):
         if isinstance(data, str) and data.startswith('data:image'):
             format, imgstr = data.split(';base64,')
@@ -132,6 +139,7 @@ class Base64ImageField(serializers.ImageField):
 
 
 class RecipeReadSerializer(serializers.ModelSerializer):
+    """Сериализатор для просмотра рецептов."""
     tags = TagSerializer(
         many=True,
         read_only=True,
@@ -182,6 +190,7 @@ class RecipeReadSerializer(serializers.ModelSerializer):
 
 
 class IngredientRecipeSerializer(serializers.ModelSerializer):
+    """Сериализатор для связи ингредиентов и рецепта."""
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all(),
     )
@@ -195,6 +204,7 @@ class IngredientRecipeSerializer(serializers.ModelSerializer):
 
 
 class RecipePostSerializer(serializers.ModelSerializer):
+    """Сериализатор для создания и редактирования рецепта."""
     ingredients = IngredientRecipeSerializer(
         many=True,
     )
@@ -222,33 +232,44 @@ class RecipePostSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if 'tags' not in data or not data['tags']:
-            raise serializers.ValidationError("Теги должны быть указаны.")
+            raise serializers.ValidationError(
+                'Теги должны быть указаны!'
+            )
         if 'ingredients' not in data or not data['ingredients']:
-            raise serializers.ValidationError("Ингредиенты должны быть указаны.")
+            raise serializers.ValidationError(
+                'Ингредиенты должны быть указаны!'
+            )
         return data
 
     def validate_tags(self, value):
         if not value:
-            raise serializers.ValidationError("Теги не могут быть пустыми.")
+            raise serializers.ValidationError(
+                'Теги не могут быть пустыми!'
+            )
         tags_list = []
         for tag in value:
             if tag in tags_list:
-                raise serializers.ValidationError("Теги не могут повторяться.")
+                raise serializers.ValidationError(
+                    'Теги не могут повторяться!'
+                )
             tags_list.append(tag)
         return value
 
     def validate_ingredients(self, value):
         if not value:
-            raise serializers.ValidationError("Ингредиенты не могут быть пустыми.")
+            raise serializers.ValidationError(
+                'Ингредиенты не могут быть пустыми!'
+            )
         ingredient_list = []
         for ingredient in value:
             if ingredient['id'] in ingredient_list:
-                raise serializers.ValidationError("Ингредиенты не могут повторяться.")
+                raise serializers.ValidationError(
+                    'Ингредиенты не могут повторяться!'
+                )
             ingredient_list.append(ingredient['id'])
         return value
 
-    @staticmethod
-    def create_ingredients(ingredients, recipe):
+    def create_ingredients(self, ingredients, recipe):
         ingredient_list = []
         for ingredient_data in ingredients:
             ingredient_list.append(
@@ -290,6 +311,7 @@ class RecipePostSerializer(serializers.ModelSerializer):
 
 
 class RecipeShortSerializer(serializers.ModelSerializer):
+    """Сериализатор для кратких рецептов."""
     image = Base64ImageField()
 
     class Meta:
@@ -303,6 +325,7 @@ class RecipeShortSerializer(serializers.ModelSerializer):
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
+    """Сериализатор для избранных рецептов."""
 
     class Meta:
         model = Favorite
@@ -321,6 +344,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
+    """Сериализатор для списка покупок."""
 
     class Meta:
         model = ShoppingCart
