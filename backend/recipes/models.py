@@ -6,7 +6,7 @@ User = get_user_model()
 
 
 class NameModel(models.Model):
-    """Абстрактная модель для Тег, Ингредиент и Рецепт."""
+    """Абстрактная модель для тегов, ингредиентов и рецептов."""
     name = models.CharField(
         verbose_name='Название',
         max_length=200,
@@ -17,7 +17,7 @@ class NameModel(models.Model):
 
 
 class Tag(NameModel):
-    """Модель Тег."""
+    """Модель для тега."""
     color = models.CharField(
         validators=[
             RegexValidator(
@@ -43,7 +43,7 @@ class Tag(NameModel):
 
 
 class Ingredient(NameModel):
-    """Модель Ингредиент."""
+    """Модель для ингредиента."""
     measurement_unit = models.CharField(
         verbose_name='Единицы измерения',
         max_length=256,
@@ -58,7 +58,7 @@ class Ingredient(NameModel):
 
 
 class Recipe(NameModel):
-    """Модель Рецепт."""
+    """Модель для рецепта."""
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -102,7 +102,7 @@ class Recipe(NameModel):
 
 
 class IngredientRecipe(models.Model):
-    """Промежуточная модель для Ингредиента и Рецепта."""
+    """Промежуточная модель для ингредиента и рецепта."""
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
@@ -137,7 +137,7 @@ class IngredientRecipe(models.Model):
 
 
 class FavoriteAndShoppingCartModel(models.Model):
-    """Абстрактная модель для Избранное и Список покупок."""
+    """Абстрактная модель для избранных рецептов и списка покупок."""
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -154,7 +154,7 @@ class FavoriteAndShoppingCartModel(models.Model):
 
 
 class Favorite(FavoriteAndShoppingCartModel):
-    """Модель Избранное."""
+    """Модель для избранных рецептов."""
     class Meta:
         verbose_name = 'объект "Избранное"'
         verbose_name_plural = 'Избранное'
@@ -173,7 +173,7 @@ class Favorite(FavoriteAndShoppingCartModel):
 
 
 class ShoppingCart(FavoriteAndShoppingCartModel):
-    """Модель Список покупок."""
+    """Модель для списка покупок."""
     class Meta:
         verbose_name = 'объект "Список покупок"'
         verbose_name_plural = 'Список покупок'

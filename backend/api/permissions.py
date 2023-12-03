@@ -2,7 +2,7 @@ from rest_framework import permissions
 
 
 class IsAuthorOrReadOnly(permissions.BasePermission):
-    """Разрешение на редактирование или удаление только автору объекта."""
+    """Права на редактирование или удаление только автору рецепта."""
     def has_permission(self, request, view):
         return (
             request.method in permissions.SAFE_METHODS

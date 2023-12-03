@@ -8,7 +8,7 @@ from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                             ShoppingCart, Tag)
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import (IsAuthenticated, SAFE_METHODS,
+from rest_framework.permissions import (SAFE_METHODS, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from users.models import Subscriber
@@ -17,14 +17,15 @@ from api.filters import IngredientFilter, RecipeFilter
 from api.pagination import CustomPagination
 from api.permissions import IsAuthorOrReadOnly
 from api.serializers import (FavoriteSerializer, IngredientSerializer,
-                             RecipeReadSerializer, ShoppingCartSerializer,
-                             SubscribeSerializer, TagSerializer,
-                             UserSerializer, RecipePostSerializer)
+                             RecipePostSerializer, RecipeReadSerializer,
+                             ShoppingCartSerializer, SubscribeSerializer,
+                             TagSerializer, UserSerializer)
 
 User = get_user_model()
 
 
 class UserViewSet(UserViewSet):
+    """Вьюсет для пользователей."""
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -96,11 +97,13 @@ class UserViewSet(UserViewSet):
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
+    """Вьюсет для тегов."""
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
+    """Вьюсет для ингредиентов."""
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     filter_backends = (DjangoFilterBackend, IngredientFilter)
@@ -108,6 +111,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
+    """Вьюсет для рецептов."""
     queryset = Recipe.objects.all()
     serializer_class = RecipeReadSerializer
     pagination_class = CustomPagination

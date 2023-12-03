@@ -8,6 +8,7 @@ admin.site.empty_value_display = 'Не задано'
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
+    """Админ модель для тегов."""
     list_display = (
         'name',
         'color',
@@ -20,6 +21,7 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
+    """Админ модель для ингредиентов."""
     list_display = (
         'name',
         'measurement_unit',
@@ -31,12 +33,13 @@ class IngredientAdmin(admin.ModelAdmin):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
+    """Админ модель для рецептов."""
     list_display = (
         'name',
         'text',
         'author',
-        'added_to_favorites',
-        'added_to_shopping_cart',
+        'count_of_in_favorites',
+        'count_of_in_shopping_cart',
     )
     list_filter = (
         'author',
@@ -47,17 +50,18 @@ class RecipeAdmin(admin.ModelAdmin):
         'tags',
     )
 
-    def added_to_favorites(self, object):
+    def count_of_in_favorites(self, object):
         return object.favorites.count()
-    added_to_favorites.short_description = 'Количество в избранных'
+    count_of_in_favorites.short_description = 'Количество в избранных'
 
-    def added_to_shopping_cart(self, object):
+    def count_of_in_shopping_cart(self, object):
         return object.shopping_carts.count()
-    added_to_shopping_cart.short_description = 'Количество в списке покупок'
+    count_of_in_shopping_cart.short_description = 'Количество в списке покупок'
 
 
 @admin.register(IngredientRecipe)
 class IngredientRecipeAdmin(admin.ModelAdmin):
+    """Админ модель для связи ингредиентов и рецептов."""
     list_display = (
         'recipe',
         'ingredient',
@@ -67,6 +71,7 @@ class IngredientRecipeAdmin(admin.ModelAdmin):
 
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
+    """Админ модель для избранных рецептов."""
     list_display = (
         'user',
         'recipe',
@@ -75,6 +80,7 @@ class FavoriteAdmin(admin.ModelAdmin):
 
 @admin.register(ShoppingCart)
 class ShoppingCartAdmin(admin.ModelAdmin):
+    """Админ модель для списка покупок."""
     list_display = (
         'user',
         'recipe',
