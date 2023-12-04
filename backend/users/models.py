@@ -43,6 +43,7 @@ class User(AbstractUser):
     )
 
     class Meta:
+        ordering = ['-id']
         verbose_name = 'объект "Пользователь"'
         verbose_name_plural = 'Пользователи'
 
@@ -66,6 +67,7 @@ class Subscriber(models.Model):
     )
 
     class Meta:
+        ordering = ['-id']
         verbose_name = 'объект "Подписчик"'
         verbose_name_plural = 'Подписчики'
         constraints = [
