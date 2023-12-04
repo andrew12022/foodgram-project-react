@@ -8,7 +8,6 @@ from recipes.models import Ingredient
 
 FILE_PATH = os.path.join(
     BASE_DIR,
-    '..',
     'data'
 )
 
