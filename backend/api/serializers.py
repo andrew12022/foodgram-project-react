@@ -4,8 +4,8 @@ import webcolors
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from django.db.models import F
-from rest_framework import serializers
 from djoser.serializers import UserCreateSerializer, UserSerializer
+from rest_framework import serializers
 
 from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                             ShoppingCart, Tag)
