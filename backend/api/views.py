@@ -4,14 +4,11 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
-from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
-                            ShoppingCart, Tag)
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import (SAFE_METHODS, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
-from users.models import Subscriber
 
 from api.filters import IngredientFilter, RecipeFilter
 from api.pagination import CustomPagination
@@ -20,6 +17,9 @@ from api.serializers import (FavoriteSerializer, IngredientSerializer,
                              RecipePostSerializer, RecipeReadSerializer,
                              ShoppingCartSerializer, SubscribeSerializer,
                              TagSerializer, UserSerializer)
+from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                            ShoppingCart, Tag)
+from users.models import Subscriber
 
 User = get_user_model()
 
@@ -65,9 +65,9 @@ class UserViewSet(UserViewSet):
         if request.method == 'POST':
             if user == author:
                 return Response(
-                        {'errors': 'На самого себя нельзя подписаться!'},
-                        status=status.HTTP_400_BAD_REQUEST,
-                    )
+                    {'errors': 'На самого себя нельзя подписаться!'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             if Subscriber.objects.filter(user=user, author=author).exists():
                 return Response(
                     {'errors': 'Подписка уже есть!'},
@@ -138,8 +138,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 )
             except Recipe.DoesNotExist:
                 return Response(
-                        {'errors': 'Рецепта не существует!'},
-                        status=status.HTTP_400_BAD_REQUEST,
+                    {'errors': 'Рецепта не существует!'},
+                    status=status.HTTP_400_BAD_REQUEST,
                 )
             data = {
                 'user': user.id,
@@ -164,8 +164,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
             )
             try:
                 recipe = Favorite.objects.get(
-                        user=user,
-                        recipe=recipe,
+                    user=user,
+                    recipe=recipe,
                 )
                 recipe.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
@@ -189,8 +189,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 )
             except Recipe.DoesNotExist:
                 return Response(
-                        {'errors': 'Рецепта не существует!'},
-                        status=status.HTTP_400_BAD_REQUEST,
+                    {'errors': 'Рецепта не существует!'},
+                    status=status.HTTP_400_BAD_REQUEST,
                 )
             data = {
                 'user': user.id,
@@ -215,8 +215,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
             )
             try:
                 recipe = ShoppingCart.objects.get(
-                        user=user,
-                        recipe=recipe,
+                    user=user,
+                    recipe=recipe,
                 )
                 recipe.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)

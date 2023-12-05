@@ -35,6 +35,7 @@ class Tag(NameModel):
     )
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'объект "Тег"'
         verbose_name_plural = 'Теги'
 
@@ -50,6 +51,7 @@ class Ingredient(NameModel):
     )
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'объект "Ингредиент"'
         verbose_name_plural = 'Ингредиенты'
 
@@ -94,6 +96,7 @@ class Recipe(NameModel):
     )
 
     class Meta:
+        ordering = ['-id']
         verbose_name = 'объект "Рецепт"'
         verbose_name_plural = 'Рецепты'
 

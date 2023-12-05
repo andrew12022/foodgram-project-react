@@ -14,6 +14,9 @@ class TagAdmin(admin.ModelAdmin):
         'color',
         'slug',
     )
+    search_fields = (
+        'name',
+    )
     list_filter = (
         'name',
     )
@@ -26,9 +29,18 @@ class IngredientAdmin(admin.ModelAdmin):
         'name',
         'measurement_unit',
     )
+    search_fields = (
+        'name',
+    )
     list_filter = (
         'name',
     )
+
+
+class IngredientRecipeInline(admin.StackedInline):
+    """Админ модель для управления ингредиентов в рецептах."""
+    model = IngredientRecipe
+    extra = 0
 
 
 @admin.register(Recipe)
@@ -41,6 +53,9 @@ class RecipeAdmin(admin.ModelAdmin):
         'count_of_in_favorites',
         'count_of_in_shopping_cart',
     )
+    search_fields = (
+        'name',
+    )
     list_filter = (
         'author',
         'name',
@@ -48,6 +63,9 @@ class RecipeAdmin(admin.ModelAdmin):
     )
     filter_horizontal = (
         'tags',
+    )
+    inlines = (
+        IngredientRecipeInline,
     )
 
     def count_of_in_favorites(self, object):
@@ -57,16 +75,6 @@ class RecipeAdmin(admin.ModelAdmin):
     def count_of_in_shopping_cart(self, object):
         return object.shopping_carts.count()
     count_of_in_shopping_cart.short_description = 'Количество в списке покупок'
-
-
-@admin.register(IngredientRecipe)
-class IngredientRecipeAdmin(admin.ModelAdmin):
-    """Админ модель для связи ингредиентов и рецептов."""
-    list_display = (
-        'recipe',
-        'ingredient',
-        'amount',
-    )
 
 
 @admin.register(Favorite)
