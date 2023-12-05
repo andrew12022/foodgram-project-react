@@ -40,4 +40,4 @@ services:
       - static_foodram:/var/html/static/
       - media_foodram:/var/html/media/
     depends_on:
-      - db
+      - frontend
