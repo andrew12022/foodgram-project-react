@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import Group
+from rest_framework.authtoken.models import TokenProxy
 
 from users.models import Subscriber, User
 
@@ -22,13 +24,13 @@ class UserAdmin(UserAdmin):
         'first_name',
     )
 
+    @admin.display(description='Количество рецептов')
     def count_of_recipes(self, object):
         return object.recipes.count()
-    count_of_recipes.short_description = 'Количество рецептов'
 
+    @admin.display(description='Количество подписчиков')
     def count_of_subscribers(self, object):
         return object.author_subscribers.count()
-    count_of_subscribers.short_description = 'Количество подписчиков'
 
 
 @admin.register(Subscriber)
@@ -38,3 +40,7 @@ class SubscriberAdmin(admin.ModelAdmin):
         'user',
         'author',
     )
+
+
+admin.site.unregister(Group)
+admin.site.unregister(TokenProxy)
