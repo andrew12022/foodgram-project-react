@@ -41,6 +41,7 @@ class IngredientRecipeInline(admin.StackedInline):
     """Админ модель для управления ингредиентов в рецептах."""
     model = IngredientRecipe
     extra = 0
+    min_num = 1
 
 
 @admin.register(Recipe)
@@ -50,6 +51,8 @@ class RecipeAdmin(admin.ModelAdmin):
         'name',
         'text',
         'author',
+        'display_tags',
+        'display_ingredients',
         'count_of_in_favorites',
         'count_of_in_shopping_cart',
     )
@@ -68,13 +71,35 @@ class RecipeAdmin(admin.ModelAdmin):
         IngredientRecipeInline,
     )
 
+    @admin.display(description='Теги')
+    def display_tags(self, object):
+        return ', '.join(
+            [tags.name for tags in object.tags.all()]
+        )
+
+    @admin.display(description='Ингредиенты')
+    def display_ingredients(self, object):
+        return ', '.join(
+            [ingredients.name for ingredients in object.ingredients.all()]
+        )
+
+    @admin.display(description='Количество в избранных')
     def count_of_in_favorites(self, object):
         return object.favorites.count()
-    count_of_in_favorites.short_description = 'Количество в избранных'
 
+    @admin.display(description='Количество в списке покупок')
     def count_of_in_shopping_cart(self, object):
         return object.shopping_carts.count()
-    count_of_in_shopping_cart.short_description = 'Количество в списке покупок'
+
+
+@admin.register(IngredientRecipe)
+class IngredientRecipeAdmin(admin.ModelAdmin):
+    """Админ модель для ингредиентов в рецептах"""
+    list_display = (
+        'recipe',
+        'ingredient',
+        'amount',
+    )
 
 
 @admin.register(Favorite)

@@ -1,6 +1,9 @@
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator, RegexValidator
+from django.core.validators import (MaxValueValidator, MinValueValidator,
+                                    RegexValidator)
 from django.db import models
+
+from foodgram import constants
 
 User = get_user_model()
 
@@ -9,7 +12,7 @@ class NameModel(models.Model):
     """Абстрактная модель для тегов, ингредиентов и рецептов."""
     name = models.CharField(
         verbose_name='Название',
-        max_length=200,
+        max_length=constants.MAX_LENGTH_FIELDS_OF_RECIPES,
     )
 
     class Meta:
@@ -23,14 +26,14 @@ class Tag(NameModel):
             RegexValidator(
                 regex='^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
                 message='Ошибка! Проверьте вводимый формат',
-            )
+            ),
         ],
         verbose_name='Цветовой код',
-        max_length=7,
+        max_length=constants.MAX_LENGTH_FIELD_OF_COLOR,
     )
     slug = models.SlugField(
         verbose_name='Идентификатор',
-        max_length=50,
+        max_length=constants.MAX_LENGTH_FIELDS_OF_RECIPES,
         unique=True,
     )
 
@@ -47,7 +50,7 @@ class Ingredient(NameModel):
     """Модель для ингредиента."""
     measurement_unit = models.CharField(
         verbose_name='Единицы измерения',
-        max_length=256,
+        max_length=constants.MAX_LENGTH_FIELDS_OF_RECIPES,
     )
 
     class Meta:
@@ -88,9 +91,13 @@ class Recipe(NameModel):
     cooking_time = models.PositiveSmallIntegerField(
         validators=[
             MinValueValidator(
-                1,
+                constants.MIN_VALIDATION_VALUE,
                 'Минимальное значение = 1',
-            )
+            ),
+            MaxValueValidator(
+                constants.MAX_VALIDATION_VALUE_OF_COOKING_TIME,
+                'Максимально значения = 1440',
+            ),
         ],
         verbose_name='Время приготовления',
     )
@@ -121,9 +128,13 @@ class IngredientRecipe(models.Model):
     amount = models.PositiveSmallIntegerField(
         validators=[
             MinValueValidator(
-                1,
+                constants.MIN_VALIDATION_VALUE,
                 'Минимальное значение = 1',
-            )
+            ),
+            MaxValueValidator(
+                constants.MAX_VALIDATION_VALUE_OF_AMOUNT,
+                'Максимально значения = 5000',
+            ),
         ],
         verbose_name='Количество',
     )
@@ -165,8 +176,8 @@ class Favorite(FavoriteAndShoppingCartModel):
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
-                name='unique_favorite'
-            )
+                name='unique_favorite',
+            ),
         ]
 
     def __str__(self) -> str:
@@ -184,8 +195,8 @@ class ShoppingCart(FavoriteAndShoppingCartModel):
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
-                name='unique_shopping_cart'
-            )
+                name='unique_shopping_cart',
+            ),
         ]
 
     def __str__(self) -> str:
