@@ -56,7 +56,7 @@ class UserSerializer(UserSerializer):
 
 
 class SubscribeShowSerializer(UserSerializer):
-    """Сериализатор для подписки."""
+    """Сериализатор для просмотра подписок."""
     recipes_count = serializers.ReadOnlyField(source='recipes.count')
     recipes = serializers.SerializerMethodField()
 
@@ -101,6 +101,8 @@ class SubscribeShowSerializer(UserSerializer):
 
 
 class SubscribeSerializer(serializers.ModelSerializer):
+    """Сериализатор для подписки."""
+
     class Meta:
         model = Subscriber
         fields = (
@@ -125,9 +127,11 @@ class SubscribeSerializer(serializers.ModelSerializer):
         return data
 
     def to_representation(self, instance):
-        request = self.context.get('request')
         return SubscribeShowSerializer(
-            instance.author, context={'request': request}
+            instance.author,
+            context={
+                'request': self.context.get('request')
+            },
         ).data
 
 
@@ -361,6 +365,7 @@ class RecipeShortSerializer(serializers.ModelSerializer):
 
 
 class FavoriteAndShoppingCartSerializer(serializers.ModelSerializer):
+    """Общий сериализатор для избранного и списка покупок."""
 
     class Meta:
         fields = (
