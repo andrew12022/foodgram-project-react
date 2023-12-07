@@ -2,17 +2,20 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import RegexValidator
 from django.db import models
+from django.db.models import F, Q
+
+from foodgram import constants
 
 
 class User(AbstractUser):
     """Модель для пользователя."""
     email = models.EmailField(
-        max_length=254,
+        max_length=constants.MAX_LENGTH_FIELD_OF_EMAIL,
         verbose_name='Адрес электронной почты',
         unique=True,
     )
     username = models.CharField(
-        max_length=150,
+        max_length=constants.MAX_LENGTH_FIELDS_OF_USERS,
         verbose_name='Уникальный юзернейм',
         unique=True,
         validators=[
@@ -23,15 +26,15 @@ class User(AbstractUser):
         ],
     )
     first_name = models.CharField(
-        max_length=150,
+        max_length=constants.MAX_LENGTH_FIELDS_OF_USERS,
         verbose_name='Имя',
     )
     last_name = models.CharField(
-        max_length=150,
+        max_length=constants.MAX_LENGTH_FIELDS_OF_USERS,
         verbose_name='Фамилия',
     )
     password = models.CharField(
-        max_length=150,
+        max_length=constants.MAX_LENGTH_FIELDS_OF_USERS,
         verbose_name='Пароль',
         validators=[validate_password],
     )
@@ -73,8 +76,12 @@ class Subscriber(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'author'],
-                name='unique_subscriber'
-            )
+                name='unique_subscriber',
+            ),
+            models.CheckConstraint(
+                check=~Q(user=F('author')),
+                name='user_not_author',
+            ),
         ]
 
     def __str__(self) -> str:
