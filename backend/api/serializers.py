@@ -80,11 +80,7 @@ class SubscribeShowSerializer(UserSerializer):
             'last_name',
             'is_subscribed',
             'recipes',
-            'recipes_count',
         )
-
-    def get_recipes_count(self, object):
-        return object.recipes.count()
 
     def get_recipes(self, object):
         request = self.context.get('request')
@@ -165,9 +161,7 @@ class IngredientRecipeSerializer(serializers.ModelSerializer):
     """Сериализатор для связи ингредиентов и рецепта."""
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all(),
-        error_messages={
-            'does_not_exist': "Запись не существует."
-        },
+        error_messages=constants.ERROR_MESSAGE,
     )
     name = serializers.ReadOnlyField(
         source='ingredient.name',
@@ -244,9 +238,7 @@ class RecipePostSerializer(serializers.ModelSerializer):
     tags = serializers.PrimaryKeyRelatedField(
         many=True,
         queryset=Tag.objects.all(),
-        error_messages={
-            'does_not_exist': "Запись не существует."
-        },
+        error_messages=constants.ERROR_MESSAGE,
     )
     image = Base64ImageField()
     author = UserSerializer(
@@ -287,7 +279,7 @@ class RecipePostSerializer(serializers.ModelSerializer):
                 'Теги не могут быть пустыми!'
             )
         tags_set = set(value)
-        if len(value) > len(tags_set):
+        if len(value) != len(tags_set):
             raise serializers.ValidationError(
                 'Теги не могут повторяться!'
             )
@@ -298,14 +290,11 @@ class RecipePostSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Ингредиенты не могут быть пустыми!'
             )
-        ingredient_set = set()
-        for ingredient in value:
-            ingredient_id = ingredient['id']
-            if ingredient_id in ingredient_set:
-                raise serializers.ValidationError(
-                    'Ингредиенты не могут повторяться!'
-                )
-            ingredient_set.add(ingredient_id)
+        ingredient_set = {ingredient['id'] for ingredient in value}
+        if len(value) != len(ingredient_set):
+            raise serializers.ValidationError(
+                'Ингредиенты не могут повторяться!'
+            )
         return value
 
     def create_ingredients(self, ingredients, recipe):
