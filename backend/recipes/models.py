@@ -92,11 +92,17 @@ class Recipe(NameModel):
         validators=[
             MinValueValidator(
                 constants.MIN_VALIDATION_VALUE,
-                'Минимальное значение = 1',
+                (
+                    'Минимальное значение = '
+                    f'{constants.MIN_VALIDATION_VALUE}'
+                ),
             ),
             MaxValueValidator(
                 constants.MAX_VALIDATION_VALUE_OF_COOKING_TIME,
-                'Максимально значения = 1440',
+                (
+                    'Максимальное значение = '
+                    f'{constants.MAX_VALIDATION_VALUE_OF_COOKING_TIME}'
+                ),
             ),
         ],
         verbose_name='Время приготовления',
@@ -129,11 +135,17 @@ class IngredientRecipe(models.Model):
         validators=[
             MinValueValidator(
                 constants.MIN_VALIDATION_VALUE,
-                'Минимальное значение = 1',
+                (
+                    'Минимальное значение = '
+                    f'{constants.MIN_VALIDATION_VALUE}'
+                ),
             ),
             MaxValueValidator(
                 constants.MAX_VALIDATION_VALUE_OF_AMOUNT,
-                'Максимально значения = 5000',
+                (
+                    'Максимальное значение = '
+                    f'{constants.MAX_VALIDATION_VALUE_OF_AMOUNT}'
+                ),
             ),
         ],
         verbose_name='Количество',
