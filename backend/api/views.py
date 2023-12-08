@@ -122,12 +122,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeReadSerializer
         return RecipePostSerializer
 
-    @action(
-        detail=True,
-        methods=['POST'],
-        permission_classes=[IsAuthenticated],
-    )
-    def favorite(self, request, pk):
+    def add_to(self, request, pk, serializer_class):
         try:
             recipe = Recipe.objects.get(
                 id=pk,
@@ -141,7 +136,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             'user': request.user.id,
             'recipe': recipe.id
         }
-        serializer = FavoriteSerializer(
+        serializer = serializer_class(
             data=data,
             context={'request': request},
         )
@@ -149,24 +144,35 @@ class RecipeViewSet(viewsets.ModelViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @favorite.mapping.delete
-    def delete_favorite(self, request, pk):
+    def remove_from(self, request, pk, model):
         recipe = get_object_or_404(
             Recipe,
             id=pk,
         )
         try:
-            recipe = Favorite.objects.get(
+            recipe = model.objects.get(
                 user=request.user,
                 recipe=recipe,
             )
             recipe.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-        except Favorite.DoesNotExist:
+        except model.DoesNotExist:
             return Response(
                 {'errors': 'Рецепта нет!'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+    @action(
+        detail=True,
+        methods=['POST'],
+        permission_classes=[IsAuthenticated],
+    )
+    def favorite(self, request, pk):
+        return self.add_to(request, pk, FavoriteSerializer)
+
+    @favorite.mapping.delete
+    def delete_favorite(self, request, pk):
+        return self.remove_from(request, pk, Favorite)
 
     @action(
         detail=True,
@@ -174,45 +180,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated]
     )
     def shopping_cart(self, request, pk):
-        try:
-            recipe = Recipe.objects.get(
-                id=pk,
-            )
-        except Recipe.DoesNotExist:
-            return Response(
-                {'errors': 'Рецепта не существует!'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        data = {
-            'user': request.user.id,
-            'recipe': recipe.id
-        }
-        serializer = ShoppingCartSerializer(
-            data=data,
-            context={'request': request},
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return self.add_to(request, pk, ShoppingCartSerializer)
 
     @shopping_cart.mapping.delete
     def delete_shopping_cart(self, request, pk):
-        recipe = get_object_or_404(
-            Recipe,
-            id=pk,
-        )
-        try:
-            recipe = ShoppingCart.objects.get(
-                user=request.user,
-                recipe=recipe,
-            )
-            recipe.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except ShoppingCart.DoesNotExist:
-            return Response(
-                {'errors': 'Рецепта нет!'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        return self.remove_from(request, pk, ShoppingCart)
 
     @action(
         detail=False,
