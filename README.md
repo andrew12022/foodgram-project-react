@@ -109,14 +109,21 @@ docker compose -f docker-compose.production.yml exec backend python manage.py im
 ```
 
 ## Технологии и необходимые инструменты
-- Django: Бэкенд
-- React: Фронтенд
-- PostgreSQL: База данных для хранения данных
-- Docker: Контейнеризация приложения
+- Python 3.9
+- Django 3.2.16
+- PostgreSQL
+- Docker
+- Node.js 9.x.x
+- Nginx
+- Gunicorn 20.x.x
+- React 
+- python-dotenv
+- DRF
+- Djoser
 
 ## Ссылка на проект
 - [Адрес веб-приложения](https://andrew12022.hopto.org/)
 - [Адрес документации](https://andrew12022.hopto.org/api/docs/)
 
 ## Автор
-- [andrew12022](https://github.com/andrew12022)
+- [Андрей Елистратов](https://github.com/andrew12022)
