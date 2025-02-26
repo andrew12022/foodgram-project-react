@@ -119,6 +119,7 @@ docker compose -f docker-compose.production.yml exec backend python manage.py im
 - Gunicorn
 - Nginx
 - Docker
+- React
 
 ## Автор
 - [Андрей Елистратов](https://github.com/andrew12022)
