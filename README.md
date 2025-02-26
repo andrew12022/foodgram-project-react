@@ -30,11 +30,11 @@
 Клонировать репозиторий и перейти в него в командной строке:
 
 ```
-git clone git@github.com:andrew12022/foodgram-project-react.git
+git clone git@github.com:andrew12022/foodgram_project_react.git
 ```
 
 ```
-cd foodgram-project-react/backend
+cd foodgram_project_react/backend
 ```
 
 Cоздать и активировать виртуальное окружение:
