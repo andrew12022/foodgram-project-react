@@ -27,6 +27,8 @@
 
 ## Установка
 
+### Бэкенд (Django)
+
 Клонировать репозиторий и перейти в него в командной строке:
 
 ```
@@ -76,7 +78,7 @@ ALLOWED_HOSTS=указать внешний IP сервера, 127.0.0.1, localh
 python manage.py migrate
 ```
 
-### Контейнеризация
+### Контейнеризация (Docker)
 
 Перейти в папку /infra в командной строке:
 ```
@@ -117,10 +119,6 @@ docker compose -f docker-compose.production.yml exec backend python manage.py im
 - Gunicorn
 - Nginx
 - Docker
-
-## Ссылка на проект
-- [Адрес веб-приложения](https://andrew12022.hopto.org/)
-- [Адрес документации](https://andrew12022.hopto.org/api/docs/)
 
 ## Автор
 - [Андрей Елистратов](https://github.com/andrew12022)
